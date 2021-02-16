@@ -5,10 +5,11 @@ Demo Wrapper to illustrate the plugin developpement. This Mock wrapper will emul
 from time import perf_counter, sleep
 import math
 from serial.tools import list_ports
+import serial
 ports = [port.name for port in list_ports.comports()]
 
 class ActuatorWrapper:
-    units = 'mm'
+    units = 'step'
 
     def __init__(self):
         self._com_port = ''
@@ -22,7 +23,14 @@ class ActuatorWrapper:
         -------
         bool: True is instrument is opened else False
         """
+        self.device=serial.Serial(port='/dev/tty.usbmodem401101',baudrate=9600)
         return True
+
+    def sendToArduino(self, sendStr):
+        startMarker = '<'
+        endMarker = '>'
+        message = startMarker + sendStr + endMarker
+        self.device.write(message.encode())
 
     def move_at(self, value):
         """
@@ -32,10 +40,14 @@ class ActuatorWrapper:
         value: (float) the target value
         """
         self._target_value = value
-        self._current_value = value
+        self._init_value = self._current_value
+        self._current_value = self._init_value + self._target_value
+        self.sendToArduino(f'move,{self._target_value}')
+        # self._start_time = perf_counter()
+        self._moving = True
 
     def stop(self):
-        pass
+        self.sendToArduino(f'move,{stop}')
 
     def get_value(self):
         """
@@ -47,7 +59,9 @@ class ActuatorWrapper:
         return self._current_value
 
     def close_communication(self):
-        pass
+        self.device.close()
+        connected = self.device.isOpen()
+        return f'Motor connected:{connected}'
 
 
 
