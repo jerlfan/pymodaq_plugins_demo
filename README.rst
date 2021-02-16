@@ -9,3 +9,5 @@ For an exhaustive list of the available plugins, see https://github.com/CEMES-CN
 GitHub repo: https://github.com/CEMES-CNRS
 
 Documentation: http://pymodaq.cnrs.fr/
+
+I have a problem with pyserial from pip have to install it from conda
