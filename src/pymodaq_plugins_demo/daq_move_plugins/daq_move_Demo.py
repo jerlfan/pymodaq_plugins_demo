@@ -150,9 +150,6 @@ class DAQ_Move_Demo(DAQ_Move_base):
         self.controller.move_at(position)
         self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
         ##############################
-
-
-
         self.target_position = position
         self.poll_moving()  #start a loop to poll the current actuator value and compare it with target position
 
@@ -167,7 +164,7 @@ class DAQ_Move_Demo(DAQ_Move_base):
         self.target_position = position + self.current_position
 
         ## TODO for your custom plugin
-        self.controller.move_at(self.target_position)
+        self.controller.move_at(position)
         self.emit_status(ThreadCommand('Update_Status',['Some info you want to log']))
         ##############################
 
@@ -185,6 +182,7 @@ class DAQ_Move_Demo(DAQ_Move_base):
         self.controller.move_at(0)
         self.emit_status(ThreadCommand('Update_Status',['Some info you want to log']))
         ##############################
+        self.poll_moving()
 
 
     def stop_motion(self):
@@ -198,7 +196,7 @@ class DAQ_Move_Demo(DAQ_Move_base):
 
       ## TODO for your custom plugin
       self.controller.stop()
-      self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
+      self.emit_status(ThreadCommand('Update_Status', ['Motor stopped']))
       self.move_done() #to let the interface know the actuator stopped
       ##############################
 
